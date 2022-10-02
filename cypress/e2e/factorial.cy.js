@@ -4,34 +4,20 @@
 // type definitions for custom commands like "createDefaultTodos"
 /// <reference types="../support" />
 
-const fact = function (x) {
-  if (x < 0) {
-    return NaN;
-  }
-  else if (x == 0) {
-    return 1;
-  }
-  else {
-    return x * fact(x - 1);
-  }
-}
+import { data } from "../fixtures/data.json"
 
 describe('Check factorials in range (10,100)', () => {
   beforeEach(() => {
     cy.visit('/');
   })
 
-  var i;
-  var j = 10;
-  for (i = 10; i <= 100; i++) {
-    it(`checks factorial of ${i}`, () => {
-      cy.log(j);
-      cy.get('input[id="number"]').should('be.visible').clear().type(j);
+  data.forEach((element) => {
+    it(`checks factorial of ${element["number"]}`, () => {
+      cy.get('input[id="number"]').should('be.visible').clear().type(element["number"]);
       cy.get('button[id="getFactorial"]').should('be.visible').click();
       cy.get('p[id="resultDiv"]')
         .should('be.visible')
-        .and('have.text', `The factorial of ${j} is: ${fact(j)}`);
-      j++;
+        .and('have.text', `The factorial of ${element["number"]} is: ${element["factorial"]}`);
     })
-  }
+  })
 })
